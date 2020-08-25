@@ -1,37 +1,46 @@
 const executaQuery = require('../database/queries')
 
 class Servico {
-  lista(res) {
-    const sql = 'SELECT * FROM Servicos'
+  lista() {
+    const sql = 'SELECT * FROM Servicos';
 
-    executaQuery(res, sql)
+    return executaQuery(sql);
   }
 
-  buscaPorId(res, id) {
-    const sql = `SELECT * FROM Servicos WHERE id=${parseInt(id)}`
+  buscaPorId(id) {
+    const sql = `SELECT * FROM Servicos WHERE id=${id}`;
 
-    executaQuery(res, sql)
+    return executaQuery(sql)
+      .then(dados => dados[0]);
   }
 
-  adiciona(res, item) {
-    const { nome, preco, descricao } = item
-    const sql = `INSERT INTO Servicos(nome, Preco, Descricao) VALUES('${nome}', ${preco}, '${descricao}')`
+  adiciona(item) {
+    const { nome, preco, descricao } = item;
+    const sql = `INSERT INTO Servicos(nome, Preco, Descricao) VALUES('${nome}', ${preco}, '${descricao}')`;
 
-    executaQuery(res, sql)
+    return executaQuery(sql)
+      .then(resposta => {
+        return ({
+          id: resposta.insertId,
+          ...item
+        })
+      });
   }
 
-  atualiza(res, novoItem, id) {
-    const { nome, preco, descricao } = novoItem
-    const sql = `UPDATE Servicos SET nome='${nome}', Preco=${preco}, Descricao='${descricao}' WHERE id=${id}`
+  atualiza(novoItem) {
+    const { id, nome, preco, descricao } = novoItem;
+    const sql = `UPDATE Servicos SET nome='${nome}', Preco=${preco}, Descricao='${descricao}' WHERE id=${id}`;
 
-    executaQuery(res, sql)
+    return executaQuery(sql)
+      .then(() => novoItem);
   }
 
-  deleta(res, id) {
-    const sql = `DELETE FROM Servicos WHERE id=${id}`
+  deleta(id) {
+    const sql = `DELETE FROM Servicos WHERE id=${id}`;
 
-    executaQuery(res, sql)
+    return executaQuery(sql)
+      .then(() => id);
   }
 }
 
-module.exports = new Servico
+module.exports = new Servico;

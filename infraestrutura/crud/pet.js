@@ -112,4 +112,4 @@ class Pet {
   }
 }
 
-module.exports = new Pet
+module.exports = new Pet;
